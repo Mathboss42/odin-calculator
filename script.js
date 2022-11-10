@@ -1,4 +1,4 @@
-let displayValue = '';
+let displayValue = '0';
 let firstValue = '';
 let secondValue = '';
 let currentOperator = '';
@@ -6,7 +6,7 @@ let currentOperator = '';
 
 const displayScreen = document.querySelector('p');
 const operandButtons = Array.from(document.querySelectorAll('.operand'));
-operandButtons.forEach(button => button.addEventListener('click', display));
+operandButtons.forEach(button => button.addEventListener('click', displayDigit));
 const operatorButtons = Array.from(document.querySelectorAll('.operator'));
 operatorButtons.splice(3, 2);
 operatorButtons.forEach(button => button.addEventListener('click', setOperator));
@@ -22,9 +22,15 @@ clearButton.addEventListener('click', clear);
 //when user presses equals, operate and display result
 
 
-function display(event) {
-    displayValue += event.target.dataset.key;
-    displayScreen.textContent = displayValue;
+function displayDigit(event) {
+    if (displayValue === '0') {
+        displayValue = '';
+        displayValue += event.target.dataset.key;
+        displayScreen.textContent = displayValue;
+    } else {
+        displayValue += event.target.dataset.key;
+        displayScreen.textContent = displayValue;
+    }
     if (firstValue !== '' && secondValue === '') {
         secondValue = displayValue;
         // console.log(firstValue);
@@ -43,7 +49,7 @@ function updateDisplay() {
 function setOperator(event) {
     if (firstValue === '' && secondValue === '') {
         firstValue = displayValue;
-        displayValue = '';
+        displayValue = '0';
         currentOperator = event.target.dataset.key;
         // console.log(firstValue);
         // console.log(secondValue);
@@ -54,7 +60,7 @@ function setOperator(event) {
         currentOperator = event.target.dataset.key;
         firstValue = displayValue;
         secondValue = '';
-        displayValue = '';
+        displayValue = '0';
         // console.log(firstValue);
         // console.log(secondValue);
         // console.log(displayValue);
@@ -70,7 +76,7 @@ function equals() {
 
 
 function clear() {
-    displayValue = '';
+    displayValue = '0';
     firstValue = '';
     secondValue = '';
     updateDisplay();
@@ -93,7 +99,7 @@ function multiply(a, b) {
 
 
 function divide(a, b) {
-    return a / b;
+    return Math.round(a / b * 10) / 10;
 }
 
 
