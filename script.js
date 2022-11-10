@@ -2,6 +2,7 @@ let displayValue = '0';
 let firstValue = '';
 let secondValue = '';
 let currentOperator = '';
+let isDone = false;
 
 
 const displayScreen = document.querySelector('p');
@@ -23,7 +24,11 @@ clearButton.addEventListener('click', clear);
 
 
 function displayDigit(event) {
-    if (displayValue === '0') {
+    if (isDone) {
+        clear();
+        isDone = false;   
+    } 
+    if (displayValue == '0') {
         displayValue = '';
         displayValue += event.target.dataset.key;
         displayScreen.textContent = displayValue;
@@ -56,7 +61,7 @@ function setOperator(event) {
         // console.log(displayValue);
         // console.log(currentOperator);
     } else if (firstValue !== '' && secondValue !== '') {
-        equals();
+        equals(false);
         currentOperator = event.target.dataset.key;
         firstValue = displayValue;
         secondValue = '';
@@ -69,9 +74,15 @@ function setOperator(event) {
 }
 
 
-function equals() {
-    displayValue = operate(firstValue, secondValue, currentOperator);
-    updateDisplay();
+function equals(status = true) {
+    
+    if (firstValue !== '' && secondValue !== '') { //check if all operands have been entered, causes bugs if no check
+        displayValue = operate(firstValue, secondValue, currentOperator);
+        updateDisplay();
+        isDone = status;
+    } else { //otherwise don't do anything
+        return;
+    }
 }
 
 
