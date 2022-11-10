@@ -4,9 +4,33 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Calculator</title>
+    <script src="script.js" defer></script>
+    <link rel="stylesheet" href="style.css">
 </head>
-<body>
-    
+<body> 
+    <div id="calculator-container">
+        <div id="display-container">
+            <p></p>
+        </div>
+        <div id="keyboard-container">
+                <button data-key="1" class="key operand">1</button>
+                <button data-key="2" class="key operand">2</button>
+                <button data-key="3" class="key operand">3</button>
+                <button data-key="+" class="key operator">+</button>
+                <button data-key="4" class="key operand">4</button>
+                <button data-key="5" class="key operand">5</button>
+                <button data-key="6" class="key operand">6</button>
+                <button data-key="-" class="key operator">-</button>
+                <button data-key="7" class="key operand">7</button>
+                <button data-key="8" class="key operand">8</button>
+                <button data-key="9" class="key operand">9</button>
+                <button data-key="*" class="key operator">*</button>
+                <button data-key="0" class="key operand">0</button>
+                <button data-key="=" class="key operator">=</button>
+                <button data-key="clear" class="key operator">AC</button>
+                <button data-key="/" class="key operator">/</button>
+        </div>
+    </div>
 </body>
 </html>
