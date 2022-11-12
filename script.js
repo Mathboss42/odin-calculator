@@ -29,7 +29,7 @@ console.log(decimalButton);
 
 
 function assignKey(event) {
-    // event.preventDefault();
+    event.preventDefault();
     const pressedButton = document.querySelector(`[data-keycode="${event.keyCode}"]`);
     let datakey = pressedButton.dataset.key;
     console.log(pressedButton);
@@ -76,9 +76,10 @@ function addDecimal() {
 
 
 function displayDigit(digit) {
-    if (isOperatorPressed) {
+    if (isOperatorPressed && secondValue === '') {
+        displayValue = '';
         isOperatorPressed = false;
-    } else if (isDone) {
+    } else if (isDone || isNaN(displayValue)) {
         clear();
         isDone = false;   
     } 
@@ -116,6 +117,7 @@ function updateOperationDisplay() {
 }
 
 function displayOperator(operator) {
+    if (isNaN(displayValue)) return;
     if (isOperatorPressed === true) return;
 
     if (firstValue === '' && secondValue === '') {
@@ -123,6 +125,7 @@ function displayOperator(operator) {
         updateOperationDisplay();
         firstValue = displayValue;
         displayValue = '0';
+        updateDisplay();
         currentOperator = operator;
         isOperatorPressed = true;
         // console.log(firstValue);
@@ -134,6 +137,13 @@ function displayOperator(operator) {
         currentOperator = operator;
         firstValue = displayValue;
         secondValue = '';
+        if (currentOperation.includes('=')) {
+            currentOperation = displayValue + operator;
+            displayValue = '0';
+            console.log(firstValue);
+            updateDisplay();
+            updateOperationDisplay();
+        }
         displayValue = '0';
         isOperatorPressed = true;
         isDone = false;
@@ -153,6 +163,7 @@ function equals(status = true) {
         if (!(currentOperation.includes('='))) {
             currentOperation += secondValue;
             updateOperationDisplay();
+            isOperatorPressed = false;
         } else {
             currentOperation = firstValue + currentOperator + secondValue;
             updateOperationDisplay();
