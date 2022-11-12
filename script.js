@@ -163,8 +163,8 @@ function divide(a, b) {
 }
 
 
-function modulo () {
-    return;
+function modulo(a, b) {
+    return a % b;
 }
 
 
@@ -182,6 +182,10 @@ function operate(a, b, operator) {
             break;
         case '/':
             result = divide(a, b);
+            break;
+        case '%':
+            result = modulo(a, b)
+            console.log(result);
             break;
     }
     return result;
