@@ -4,10 +4,12 @@ let secondValue = '';
 let currentOperator = '';
 let isDone = false;
 let isOperatorPressed = false;
+let currentOperation = '';
 
 window.addEventListener('keydown', assignKey);
 
-const displayScreen = document.querySelector('p');
+const resultDisplay = document.querySelector('.result-display');
+const operationDisplay = document.querySelector('.operation-display')
 const operandButtons = Array.from(document.querySelectorAll('.operand'));
 operandButtons.forEach(button => button.addEventListener('click', setDigit));
 const operatorButtons = Array.from(document.querySelectorAll('.operator'));
@@ -44,8 +46,6 @@ function assignKey(event) {
     } else if (event.keyCode === 27) {
         clear();
     }
-
-
 
     //note: when refactoring, try using an array and array methods to select correct function
 }
@@ -91,31 +91,36 @@ function displayDigit(digit) {
             return;
         } else {
             displayValue += digit;
-            displayScreen.textContent = displayValue; 
-            updateDisplay;
+            updateDisplay();
         }
     } else {
         if (displayValue == '0') {
             displayValue = '';
             displayValue += digit;
-            displayScreen.textContent = displayValue;
+            updateDisplay();
         } else {
             displayValue += digit;
-            displayScreen.textContent = displayValue;
+            updateDisplay();
         }
     }
 }
 
 
 function updateDisplay() {
-    displayScreen.textContent = displayValue;
+    resultDisplay.textContent = displayValue;
 }
 
+function updateOperationDisplay() {
+    console.log(currentOperation)
+    operationDisplay.textContent = currentOperation;
+}
 
 function displayOperator(operator) {
     if (isOperatorPressed === true) return;
 
     if (firstValue === '' && secondValue === '') {
+        currentOperation += displayValue + operator;
+        updateOperationDisplay();
         firstValue = displayValue;
         displayValue = '0';
         currentOperator = operator;
@@ -145,6 +150,13 @@ function equals(status = true) {
 
     if (firstValue !== '' && secondValue === '') {
         secondValue = displayValue;
+        if (!(currentOperation.includes('='))) {
+            currentOperation += secondValue;
+            updateOperationDisplay();
+        } else {
+            currentOperation = firstValue + currentOperator + secondValue;
+            updateOperationDisplay();
+        }
         // console.log(firstValue);
         // console.log(secondValue);
         // console.log(displayValue);
@@ -152,6 +164,8 @@ function equals(status = true) {
     }
     if (firstValue !== '' && secondValue !== '') { //check if all operands have been entered, causes bugs if no check
         displayValue = operate(firstValue, secondValue, currentOperator);
+        currentOperation += '=';
+        updateOperationDisplay();
         firstValue = displayValue;
         secondValue = '';
         updateDisplay();
@@ -166,7 +180,9 @@ function clear() {
     displayValue = '0';
     firstValue = '';
     secondValue = '';
+    currentOperation = '';
     updateDisplay();
+    updateOperationDisplay();
 }
 
 
