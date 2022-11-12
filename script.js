@@ -5,10 +5,11 @@ let currentOperator = '';
 let isDone = false;
 let isOperatorPressed = false;
 
+window.addEventListener('keydown', assignKey);
 
 const displayScreen = document.querySelector('p');
 const operandButtons = Array.from(document.querySelectorAll('.operand'));
-operandButtons.forEach(button => button.addEventListener('click', displayDigit));
+operandButtons.forEach(button => button.addEventListener('click', setDigit));
 const operatorButtons = Array.from(document.querySelectorAll('.operator'));
 operatorButtons.forEach(button => button.addEventListener('click', setOperator));
 const equalsButton = document.querySelector('[data-key="="]');
@@ -21,64 +22,85 @@ const invertButton = document.querySelector('[data-key="+/-"]');
 invertButton.addEventListener('click', invertSign);
 const decimalButton = document.querySelector('[data-key="."]');
 decimalButton.addEventListener('click', addDecimal);
-
-
-//when user presses operator, store display value in temporary variable and reset display value
-//store operator value in variable
-//when user presses new numbers, store those in displayValue
-//when user presses equals, operate and display result
+console.log(decimalButton);
 
 
 
-//decimal
+function assignKey(event) {
+    // event.preventDefault();
+    const pressedButton = document.querySelector(`[data-keycode="${event.keyCode}"]`);
+    let datakey = pressedButton.dataset.key;
+    console.log(pressedButton);
+    if (event.keyCode >= 96 && event.keyCode <= 105) {
+        displayDigit(datakey);
+    } else if (event.keyCode === 106 || event.keyCode === 107 || event.keyCode === 109 || event.keyCode === 111) {
+        displayOperator(datakey);
+    } else if (event.keyCode === 13) {
+        equals();
+    } else if (event.keyCode === 8) {
+        erase();
+    } else if (event.keyCode === 110) {
+        addDecimal();
+    } else if (event.keyCode === 27) {
+        clear();
+    }
+
+
+
+    //note: when refactoring, try using an array and array methods to select correct function
+}
+
+
+function setDigit(event) {
+    let digit = event.target.dataset.key;
+    displayDigit(digit);
+}
+
+function setOperator(event) {
+    let operator = event.target.dataset.key;
+    displayOperator(operator);
+}
+
+
+
 function addDecimal() {
-    //when user presses decimal button => check if display number contains decimal
-    if (!(displayValue.includes('.'))) { //if not => add dot to display number
+    if (!(displayValue.includes('.'))) {
         displayValue += '.';
         updateDisplay();
         console.log("addDecimal")
     } else {
-        //if yes => return
         return
     }
 }
 
 
 
-function displayDigit(event) {
-    
+function displayDigit(digit) {
     if (isOperatorPressed) {
         isOperatorPressed = false;
     } else if (isDone) {
         clear();
         isDone = false;   
     } 
-    //when user inputs number => check if number contains dot
+
     if (String(displayValue).includes('.')) {
-        //if contains dot => check if number has been input after decimal
         let decimalIndex = String(displayValue).indexOf('.')
         let decimal = String(displayValue).slice(decimalIndex+1);
-        // console.log('decimal ' + decimal);
         
         if (decimal.length > 0) {
             return;
         } else {
-            displayValue += event.target.dataset.key;
+            displayValue += digit;
             displayScreen.textContent = displayValue; 
             updateDisplay;
         }
     } else {
-    //if yes => return
-    //if no => add number to display
-    //if does not contain dot => add number to display
-    
-
         if (displayValue == '0') {
             displayValue = '';
-            displayValue += event.target.dataset.key;
+            displayValue += digit;
             displayScreen.textContent = displayValue;
         } else {
-            displayValue += event.target.dataset.key;
+            displayValue += digit;
             displayScreen.textContent = displayValue;
         }
     }
@@ -90,12 +112,13 @@ function updateDisplay() {
 }
 
 
-function setOperator(event) {
+function displayOperator(operator) {
     if (isOperatorPressed === true) return;
+
     if (firstValue === '' && secondValue === '') {
         firstValue = displayValue;
         displayValue = '0';
-        currentOperator = event.target.dataset.key;
+        currentOperator = operator;
         isOperatorPressed = true;
         // console.log(firstValue);
         // console.log(secondValue);
@@ -103,7 +126,7 @@ function setOperator(event) {
         // console.log(currentOperator);
     } else if (firstValue !== '') {
         equals(false);
-        currentOperator = event.target.dataset.key;
+        currentOperator = operator;
         firstValue = displayValue;
         secondValue = '';
         displayValue = '0';
@@ -119,6 +142,7 @@ function setOperator(event) {
 
 function equals(status = true) {
     if (isDone) return;
+
     if (firstValue !== '' && secondValue === '') {
         secondValue = displayValue;
         // console.log(firstValue);
