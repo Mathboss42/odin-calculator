@@ -19,6 +19,8 @@ const backButton = document.querySelector('[data-key="back"]');
 backButton.addEventListener('click', erase);
 const invertButton = document.querySelector('[data-key="+/-"]');
 invertButton.addEventListener('click', invertSign);
+const decimalButton = document.querySelector('[data-key="."]');
+decimalButton.addEventListener('click', addDecimal);
 
 
 //when user presses operator, store display value in temporary variable and reset display value
@@ -27,20 +29,58 @@ invertButton.addEventListener('click', invertSign);
 //when user presses equals, operate and display result
 
 
+
+//decimal
+function addDecimal() {
+    //when user presses decimal button => check if display number contains decimal
+    if (!(displayValue.includes('.'))) { //if not => add dot to display number
+        displayValue += '.';
+        updateDisplay();
+        console.log("addDecimal")
+    } else {
+        //if yes => return
+        return
+    }
+}
+
+
+
 function displayDigit(event) {
+    
     if (isOperatorPressed) {
         isOperatorPressed = false;
     } else if (isDone) {
         clear();
         isDone = false;   
     } 
-    if (displayValue == '0') {
-        displayValue = '';
-        displayValue += event.target.dataset.key;
-        displayScreen.textContent = displayValue;
+    //when user inputs number => check if number contains dot
+    if (String(displayValue).includes('.')) {
+        //if contains dot => check if number has been input after decimal
+        let decimalIndex = String(displayValue).indexOf('.')
+        let decimal = String(displayValue).slice(decimalIndex+1);
+        // console.log('decimal ' + decimal);
+        
+        if (decimal.length > 0) {
+            return;
+        } else {
+            displayValue += event.target.dataset.key;
+            displayScreen.textContent = displayValue; 
+            updateDisplay;
+        }
     } else {
-        displayValue += event.target.dataset.key;
-        displayScreen.textContent = displayValue;
+    //if yes => return
+    //if no => add number to display
+    //if does not contain dot => add number to display
+    
+
+        if (displayValue == '0') {
+            displayValue = '';
+            displayValue += event.target.dataset.key;
+            displayScreen.textContent = displayValue;
+        } else {
+            displayValue += event.target.dataset.key;
+            displayScreen.textContent = displayValue;
+        }
     }
 }
 
@@ -133,7 +173,7 @@ function invertSign() {
         displayValue = -displayValue;
         updateDisplay();
     } else {
-        console.log('display val ' + String(displayValue) + typeof displayValue);
+        // console.log('display val ' + String(displayValue) + typeof displayValue);
         displayValue = String(displayValue).substring(1)
         updateDisplay();
     }
@@ -185,7 +225,6 @@ function operate(a, b, operator) {
             break;
         case '%':
             result = modulo(a, b)
-            console.log(result);
             break;
     }
     return result;
